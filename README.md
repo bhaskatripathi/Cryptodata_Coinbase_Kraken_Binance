@@ -1,11 +1,12 @@
 # Cryptodata_Coinbase_Kraken_Binance
 
-This repository downloads the historical data from Coinbase, Binance, and Kraken. The Coinbase API only supports 300 records per request. We harvest the data incrementally in batches of 299 days to ensure we don't exceed the API limits.
+This repository downloads the historical data from Coinbase, Binance, and Kraken. It provides an efficient solution for downloading historical cryptocurrency data from multiple exchanges, addressing the issue of API limitations and rate limits. The Coinbase API only supports 300 records per request. We harvest the data incrementally in batches of 299 days to ensure we don't exceed the API limits. By implementing an incremental approach, the project ensures comprehensive data retrieval, allowing users to access historical OHLCV data for in-depth analysis and research.
 
 ## Features
 
 - Download historical OHLCV (Open, High, Low, Close, Volume) data from Coinbase, Binance, and Kraken
 - Batch the requests to retrieve data incrementally, working within the API limitations
+- Handle API rate limit errors by waiting for a short period before retrying the request
 - Save the downloaded data as CSV files for further analysis or processing
 - Calculate the Market Liquidity Index (MLI) for each currency pair
 - Calculate the overall exchange MLI weighted with traded volume
@@ -21,8 +22,16 @@ Client->>API: Request list of currency pairs
 API->>Client: Return list of currency pairs
 
 loop for each currency pair
-    Client->>API: Request historical OHLCV data (start_date, granularity)
-    API->>Client: Return historical OHLCV data
+    loop for each data batch
+        Client->>API: Request historical OHLCV data (start_date, end_date, granularity)
+        alt API rate limit reached
+            API->>Client: Return rate limit error
+            Client->>Client: Wait for a short period
+        else API returns data
+            API->>Client: Return historical OHLCV data
+            Client->>Client: Store and process data
+        end
+    end
     Client->>Client: Calculate MLI for each currency pair
     Client->>CSV: Save individual OHLCV data and MLI to CSV files
 end
