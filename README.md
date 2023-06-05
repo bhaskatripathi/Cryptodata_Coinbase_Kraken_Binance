@@ -53,4 +53,4 @@ Please be aware of the rate limits imposed by each exchange's API. Ensure that y
 
 ## Disclaimer
 
-This project is for educational purposes only. It is not intended to be used for financial or investment advice. Use the data and scripts at your own risk. The authors are not responsible for any loss or damages incurred as a result of using this project.
+This is a work in progress project for educational purposes only. It is not intended to be used for financial or investment advice. Use the data and scripts at your own risk. The authors are not responsible for any loss or damages incurred as a result of using this project.
